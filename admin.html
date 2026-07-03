@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>myCode - Secure Control Panel</title>
+    <title>myBlog - Admin Dashboard</title>
     <style>
         body {
             background-color: #FFFFFF;
@@ -33,7 +33,7 @@
             letter-spacing: -1px;
         }
         #logo span {
-            background-color: #28a745;
+            background-color: #FF0000;
             color: #FFF;
             padding: 2px 6px;
             border-radius: 4px;
@@ -49,12 +49,6 @@
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            margin-left: 4px;
-        }
-        .button-retro:active {
-            border: 1px solid #999999;
-            border-top: 2px solid #666666;
-            border-left: 2px solid #666666;
         }
         .container {
             max-width: 950px;
@@ -94,132 +88,75 @@
             padding: 4px;
             box-sizing: border-box;
         }
-        #login-overlay {
-            max-width: 400px;
-            margin: 100px auto;
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        
-        <div id="login-overlay" class="box" style="display: none;">
-            <div class="box-header">🔒 Developer Key Access Verification</div>
-            <div class="box-content">
-                <form id="login-form">
-                    <div class="form-group">
-                        <label>SysOp Email Link:</label>
-                        <input type="email" id="login-email" class="form-input" required placeholder="admin@mycode.co">
-                    </div>
-                    <div class="form-group">
-                        <label>Security Keyphrase Matrix:</label>
-                        <input type="password" id="login-password" class="form-input" required>
-                    </div>
-                    <button type="submit" class="button-retro" style="width: 100%; padding: 6px;">Mount Code File System</button>
-                </form>
+        <div id="header-bar">
+            <div id="logo">
+                <a href="index.html" style="color:black;">my<span>Blog</span></a> 
+                <span style="font-size:14px; color:#666; font-weight:normal;">[Admin Control Panel]</span>
+            </div>
+            <div>
+                <a href="index.html" class="button-retro" style="text-decoration:none; color:black;">← Back to Main Site</a>
             </div>
         </div>
 
-        <div id="admin-interface" style="display: none;">
-            <div id="header-bar">
-                <div id="logo">
-                    <a href="index.html" style="color:black; text-decoration:none;">my<span>Code</span></a> 
-                    <span style="font-size:14px; color:#666; font-weight:normal;">[Authenticated Repository Terminal]</span>
-                </div>
-                <div>
-                    <button class="button-retro" onclick="handleLogout()" style="color: darkred;">Unmount Session ✖</button>
-                    <a href="index.html" class="button-retro" style="text-decoration:none; color:black;">← Live Directory</a>
+        <div class="main-layout">
+            <div class="box">
+                <div class="box-header">Upload / Create New Blog Post</div>
+                <div class="box-content">
+                    <form id="post-form">
+                        <div class="form-group">
+                            <label>Post Title:</label>
+                            <input type="text" id="post-title" class="form-input" required placeholder="e.g., My crazy weekend coding session">
+                        </div>
+                        <div class="form-group">
+                            <label>Blog Content / Description Box:</label>
+                            <textarea id="post-content" rows="8" class="form-textarea" required placeholder="Type your updates here... style it like it's 2006!"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Star Rating Selection Asset:</label>
+                            <select id="post-stars" class="form-input" style="width: auto;">
+                                <option value="5">5 Stars (Awesome)</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star (Lame)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="button-retro" style="font-size:13px; padding: 5px 15px;">Publish Bulletin</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="main-layout">
-                <div class="box">
-                    <div class="box-header" id="form-panel-title">Initialize / Create Code Snippet Asset</div>
-                    <div class="box-content">
-                        <form id="code-form">
-                            <div class="form-group">
-                                <label>Script Entry Title:</label>
-                                <input type="text" id="code-title" class="form-input" required placeholder="e.g., QuickSort Array Matrix Algorithm">
-                            </div>
-                            <div class="form-group">
-                                <label>Target File Name:</label>
-                                <input type="text" id="code-filename" class="form-input" required placeholder="e.g., quicksort.py">
-                            </div>
-                            <div class="form-group">
-                                <label>Syntax Coding Language:</label>
-                                <input type="text" id="code-lang" class="form-input" required placeholder="e.g., Python, JavaScript, C++">
-                            </div>
-                            <div class="form-group">
-                                <label>Documentation Description Box:</label>
-                                <textarea id="code-desc" rows="3" class="form-textarea" required placeholder="Type instructions or structural complexities here..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Raw Source Code Area Content:</label>
-                                <textarea id="code-content" rows="12" class="form-textarea" style="font-family: monospace; background-color: #fafafa;" required placeholder="def algorithm():\n    return true"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Algorithmic Complexity Weights:</label>
-                                <select id="code-complexity" class="form-input" style="width: auto;">
-                                    <option value="5">5 Bars (Extremely Complex)</option>
-                                    <option value="4">4 Bars</option>
-                                    <option value="3" selected>3 Bars (Standard Processing)</option>
-                                    <option value="2">2 Bars</option>
-                                    <option value="1">1 Bar (O(1) Efficiency)</option>
-                                </select>
-                            </div>
-                            <button type="submit" id="submit-btn" class="button-retro" style="font-size:13px; padding: 5px 15px;">Commit Code upstream</button>
-                            <button type="button" id="cancel-edit-btn" class="button-retro" style="font-size:13px; padding: 5px 15px; display: none; color: #555;" onclick="clearEditMode()">Abort Refactor</button>
-                        </form>
+            <div class="box">
+                <div class="box-header">Manage Active Bulletins</div>
+                <div class="box-content" id="admin-queue">
                     </div>
-                </div>
-
-                <div class="box">
-                    <div class="box-header">Manage Committed Indexes</div>
-                    <div class="box-content" id="admin-queue"></div>
-                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Updated with your new project URL
-        const SUPABASE_URL = "https://yxlxgjbpcgsenrdylagz.supabase.co";
-        // REMINDER: Make sure to replace this template placeholder with your project's target Anon/Public Key API key string!
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4bHhnamJwY2dzZW5yZHlsYWd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwNzA1ODIsImV4cCI6MjA5ODY0NjU4Mn0.MIYW0HqxKMT8kKJwPFMZxwMyPY9BULQBLlZv4wTBgTk";
+        const SUPABASE_URL = "https://npgslvyukrbnugxkdisp.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_jv_RDsZY8--iwjAIFsAqDw_wHGX_RQx";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let codeItems = [];
-        let editingId = null;
-
-        _supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('admin-interface').style.display = 'block';
-                fetchQueue();
-            } else {
-                document.getElementById('login-overlay').style.display = 'block';
-                document.getElementById('admin-interface').style.display = 'none';
-            }
-        });
-
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const { error } = await _supabase.auth.signInWithPassword({ email, password });
-            if (error) alert("Verification Denied: " + error.message);
-        });
-
-        async function handleLogout() {
-            await _supabase.auth.signOut();
-            alert("File system partition unmounted safely.");
+        // 🔒 SECURITY GATEWAY
+        const accessKey = prompt("Enter Administration Password:");
+        if (accessKey !== "sUyxnIB6qRr7aG1N") {
+            alert("Access Denied: Terminal Lock Active.");
+            window.location.href = "index.html"; 
         }
 
+        let blogPosts = [];
+
         async function fetchQueue() {
-            let { data, error } = await _supabase.from('codes').select('*').order('id', { ascending: false });
+            let { data, error } = await _supabase.from('posts').select('*').order('id', { ascending: false });
             if (error) console.error(error);
-            codeItems = data || [];
+            blogPosts = data || [];
             renderQueue();
         }
 
@@ -227,93 +164,59 @@
             const queueContainer = document.getElementById('admin-queue');
             queueContainer.innerHTML = '';
 
-            if (codeItems.length === 0) {
-                queueContainer.innerHTML = '<span style="color:#666; font-style:italic;">No active indices compiled.</span>';
+            if (blogPosts.length === 0) {
+                queueContainer.innerHTML = '<span style="color:#666; font-style:italic;">No active posts in the queue matrix.</span>';
                 return;
             }
 
-            codeItems.forEach(item => {
+            blogPosts.forEach(post => {
                 const row = document.createElement('div');
                 row.style.cssText = "border-bottom: 1px dashed #CCC; padding: 6px 0; display: flex; justify-content: space-between; align-items: center;";
                 row.innerHTML = `
-                    <div style="max-width: 65%;">
-                        <strong style="color:#0033CC; font-family: monospace;">${escapeHTML(item.file_name)}</strong><br>
-                        <span style="font-size:11px; color:#666;">Title: ${escapeHTML(item.title)}</span>
+                    <div>
+                        <strong style="color:#0033CC;">${escapeHTML(post.title)}</strong><br>
+                        <span style="font-size:11px; color:#666;">Date: ${post.date}</span>
                     </div>
                     <div>
-                        <button class="button-retro" style="color:blue;" onclick="startEdit(${item.id})">Edit</button>
-                        <button class="button-retro" style="color:red;" onclick="deleteNode(${item.id})">Delete</button>
+                        <button class="button-retro" style="color:red; font-weight:normal;" onclick="deletePost(${post.id})">Delete</button>
                     </div>
                 `;
                 queueContainer.appendChild(row);
             });
         }
 
-        window.startEdit = function(id) {
-            const target = codeItems.find(c => c.id === id);
-            if (!target) return;
-
-            editingId = id;
-            document.getElementById('code-title').value = target.title;
-            document.getElementById('code-filename').value = target.file_name;
-            document.getElementById('code-lang').value = target.language;
-            document.getElementById('code-desc').value = target.description;
-            document.getElementById('code-content').value = target.code_content;
-            document.getElementById('code-complexity').value = target.complexity;
-
-            document.getElementById('form-panel-title').innerText = "⚠️ Refactoring System Node File: " + target.file_name;
-            document.getElementById('submit-btn').innerText = "Push Upstream Changes";
-            document.getElementById('cancel-edit-btn').style.display = "inline-block";
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        window.clearEditMode = function() {
-            editingId = null;
-            document.getElementById('code-form').reset();
-            document.getElementById('form-panel-title').innerText = "Initialize / Create Code Snippet Asset";
-            document.getElementById('submit-btn').innerText = "Commit Code upstream";
-            document.getElementById('cancel-edit-btn').style.display = "none";
-        }
-
-        document.getElementById('code-form').addEventListener('submit', async function(e) {
+        document.getElementById('post-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const payload = {
-                title: document.getElementById('code-title').value,
-                file_name: document.getElementById('code-filename').value,
-                language: document.getElementById('code-lang').value,
-                description: document.getElementById('code-desc').value,
-                code_content: document.getElementById('code-content').value,
-                complexity: parseInt(document.getElementById('code-complexity').value)
-            };
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const stars = parseInt(document.getElementById('post-stars').value);
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date().toLocaleDateString('en-US', options);
 
-            if (editingId !== null) {
-                const { error } = await _supabase.from('codes').update(payload).eq('id', editingId);
-                if (error) alert('Update Compilation Error: ' + error.message);
-                else {
-                    alert('Upstream file synchronization complete!');
-                    clearEditMode();
-                    fetchQueue();
+            const { error } = await _supabase.from('posts').insert([
+                {
+                    title: title,
+                    content: content,
+                    stars: stars,
+                    date: formattedDate,
+                    views: 0
                 }
+            ]);
+
+            if (error) {
+                alert('Database Error: ' + error.message);
             } else {
-                payload.date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                payload.views = 0;
-
-                const { error } = await _supabase.from('codes').insert([payload]);
-                if (error) alert('Database Link Error: ' + error.message);
-                else {
-                    document.getElementById('code-form').reset();
-                    alert('New directory tree node committed successfully!');
-                    fetchQueue();
-                }
+                document.getElementById('post-form').reset();
+                alert('Your masterpiece has been updated successfully!');
+                fetchQueue();
             }
         });
 
-        window.deleteNode = async function(id) {
-            if (confirm("Wipe this system file block entry permanently?")) {
-                if (editingId === id) clearEditMode();
-                const { error } = await _supabase.from('codes').delete().eq('id', id);
+        window.deletePost = async function(id) {
+            if (confirm("Are you sure you want to remove this bulletin from history?")) {
+                const { error } = await _supabase.from('posts').delete().eq('id', id);
                 if (error) console.error(error);
                 fetchQueue();
             }
@@ -322,6 +225,8 @@
         function escapeHTML(str) {
             return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
+
+        fetchQueue();
     </script>
 </body>
 </html>
