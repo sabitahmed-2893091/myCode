@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>myBlog - Admin Dashboard</title>
+    <title>myCode - Secure Control Panel</title>
     <style>
         body {
             background-color: #FFFFFF;
@@ -33,7 +33,7 @@
             letter-spacing: -1px;
         }
         #logo span {
-            background-color: #FF0000;
+            background-color: #28a745;
             color: #FFF;
             padding: 2px 6px;
             border-radius: 4px;
@@ -49,6 +49,12 @@
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
+            margin-left: 4px;
+        }
+        .button-retro:active {
+            border: 1px solid #999999;
+            border-top: 2px solid #666666;
+            border-left: 2px solid #666666;
         }
         .container {
             max-width: 950px;
@@ -88,75 +94,172 @@
             padding: 4px;
             box-sizing: border-box;
         }
+        .file-block {
+            background: #FFF;
+            border: 1px dashed #7F9DB9;
+            padding: 10px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .remove-file-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: red;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        #login-overlay {
+            max-width: 400px;
+            margin: 100px auto;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        <div id="header-bar">
-            <div id="logo">
-                <a href="index.html" style="color:black;">my<span>Blog</span></a> 
-                <span style="font-size:14px; color:#666; font-weight:normal;">[Admin Control Panel]</span>
-            </div>
-            <div>
-                <a href="index.html" class="button-retro" style="text-decoration:none; color:black;">← Back to Main Site</a>
+        
+        <div id="login-overlay" class="box" style="display: none;">
+            <div class="box-header">🔒 Developer Key Access Verification</div>
+            <div class="box-content">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>SysOp Email Link:</label>
+                        <input type="email" id="login-email" class="form-input" required placeholder="admin@mycode.co">
+                    </div>
+                    <div class="form-group">
+                        <label>Security Keyphrase Matrix:</label>
+                        <input type="password" id="login-password" class="form-input" required>
+                    </div>
+                    <button type="submit" class="button-retro" style="width: 100%; padding: 6px;">Mount Code File System</button>
+                </form>
             </div>
         </div>
 
-        <div class="main-layout">
-            <div class="box">
-                <div class="box-header">Upload / Create New Blog Post</div>
-                <div class="box-content">
-                    <form id="post-form">
-                        <div class="form-group">
-                            <label>Post Title:</label>
-                            <input type="text" id="post-title" class="form-input" required placeholder="e.g., My crazy weekend coding session">
-                        </div>
-                        <div class="form-group">
-                            <label>Blog Content / Description Box:</label>
-                            <textarea id="post-content" rows="8" class="form-textarea" required placeholder="Type your updates here... style it like it's 2006!"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Star Rating Selection Asset:</label>
-                            <select id="post-stars" class="form-input" style="width: auto;">
-                                <option value="5">5 Stars (Awesome)</option>
-                                <option value="4">4 Stars</option>
-                                <option value="3">3 Stars</option>
-                                <option value="2">2 Stars</option>
-                                <option value="1">1 Star (Lame)</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="button-retro" style="font-size:13px; padding: 5px 15px;">Publish Bulletin</button>
-                    </form>
+        <div id="admin-interface" style="display: none;">
+            <div id="header-bar">
+                <div id="logo">
+                    <a href="index.html" style="color:black; text-decoration:none;">my<span>Code</span></a> 
+                    <span style="font-size:14px; color:#666; font-weight:normal;">[Authenticated Repository Terminal]</span>
+                </div>
+                <div>
+                    <button class="button-retro" onclick="handleLogout()" style="color: darkred;">Unmount Session ✖</button>
+                    <a href="index.html" class="button-retro" style="text-decoration:none; color:black;">← Live Directory</a>
                 </div>
             </div>
 
-            <div class="box">
-                <div class="box-header">Manage Active Bulletins</div>
-                <div class="box-content" id="admin-queue">
+            <div class="main-layout">
+                <div class="box">
+                    <div class="box-header" id="form-panel-title">Initialize / Create Repository Asset</div>
+                    <div class="box-content">
+                        <form id="code-form">
+                            <div class="form-group">
+                                <label>Repository Title Name:</label>
+                                <input type="text" id="code-title" class="form-input" required placeholder="e.g., Fullstack Auth Application Setup">
+                            </div>
+                            <div class="form-group">
+                                <label>Documentation Description Box:</label>
+                                <textarea id="code-desc" rows="2" class="form-textarea" required placeholder="Type instructions or structural complexities here..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Algorithmic Complexity Weights:</label>
+                                <select id="code-complexity" class="form-input" style="width: auto;">
+                                    <option value="5">5 / 5 (Extremely Complex)</option>
+                                    <option value="4">4 / 5</option>
+                                    <option value="3" selected>3 / 5 (Standard Processing)</option>
+                                    <option value="2">2 / 5</option>
+                                    <option value="1">1 / 5 (O(1) Efficiency)</option>
+                                </select>
+                            </div>
+
+                            <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span style="font-weight: bold; font-size: 14px;">Repository Files Partition</span>
+                                <button type="button" class="button-retro" onclick="addFileBlock()" style="background-color: #E6F4EA; border-color: #57B874;">➕ Add Another File</button>
+                            </div>
+
+                            <div id="files-container">
+                                <!-- File blocks get created dynamically here -->
+                            </div>
+
+                            <button type="submit" id="submit-btn" class="button-retro" style="font-size:13px; padding: 6px 20px; background-color: #28a745; color: white; border-color: #208737;">Commit Repository Upstream</button>
+                            <button type="button" id="cancel-edit-btn" class="button-retro" style="font-size:13px; padding: 6px 15px; display: none; color: #555;" onclick="clearEditMode()">Abort Refactor</button>
+                        </form>
                     </div>
+                </div>
+
+                <div class="box">
+                    <div class="box-header">Manage Committed Indexes</div>
+                    <div class="box-content" id="admin-queue"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const SUPABASE_URL = "https://npgslvyukrbnugxkdisp.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_jv_RDsZY8--iwjAIFsAqDw_wHGX_RQx";
+        const SUPABASE_URL = "https://yxlxgjbpcgsenrdylagz.supabase.co";
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 🔒 SECURITY GATEWAY
-        const accessKey = prompt("Enter Administration Password:");
-        if (accessKey !== "sUyxnIB6qRr7aG1N") {
-            alert("Access Denied: Terminal Lock Active.");
-            window.location.href = "index.html"; 
+        let codeItems = [];
+        let editingId = null;
+
+        _supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('admin-interface').style.display = 'block';
+                fetchQueue();
+            } else {
+                document.getElementById('login-overlay').style.display = 'block';
+                document.getElementById('admin-interface').style.display = 'none';
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const { error } = await _supabase.auth.signInWithPassword({ email, password });
+            if (error) alert("Verification Denied: " + error.message);
+        });
+
+        async function handleLogout() {
+            await _supabase.auth.signOut();
+            alert("File system partition unmounted safely.");
         }
 
-        let blogPosts = [];
+        function addFileBlock(filename = '', lang = '', content = '') {
+            const container = document.getElementById('files-container');
+            const blockId = 'file_' + Date.now() + Math.random().toString(36).substr(2, 4);
+            
+            const block = document.createElement('div');
+            block.className = 'file-block';
+            block.id = blockId;
+            block.innerHTML = `
+                <span class="remove-file-btn" onclick="document.getElementById('${blockId}').remove()">✖ Remove File</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px;">
+                    <div>
+                        <label style="font-weight:bold; font-size:11px;">File Name:</label>
+                        <input type="text" class="form-input file-name-input" required value="${filename}" placeholder="index.html">
+                    </div>
+                    <div>
+                        <label style="font-weight:bold; font-size:11px;">Syntax Language:</label>
+                        <input type="text" class="form-input file-lang-input" required value="${lang}" placeholder="HTML">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-weight:bold; font-size:11px;">Source Code:</label>
+                    <textarea rows="6" class="form-textarea file-content-input" style="font-family: monospace; background-color: #fafafa;" required placeholder="Write or paste code contents here...">${content}</textarea>
+                </div>
+            `;
+            container.appendChild(block);
+        }
 
         async function fetchQueue() {
-            let { data, error } = await _supabase.from('posts').select('*').order('id', { ascending: false });
+            let { data, error } = await _supabase.from('codes').select('*').order('id', { ascending: false });
             if (error) console.error(error);
-            blogPosts = data || [];
+            codeItems = data || [];
             renderQueue();
         }
 
@@ -164,59 +267,126 @@
             const queueContainer = document.getElementById('admin-queue');
             queueContainer.innerHTML = '';
 
-            if (blogPosts.length === 0) {
-                queueContainer.innerHTML = '<span style="color:#666; font-style:italic;">No active posts in the queue matrix.</span>';
+            if (codeItems.length === 0) {
+                queueContainer.innerHTML = '<span style="color:#666; font-style:italic;">No active indices compiled.</span>';
                 return;
             }
 
-            blogPosts.forEach(post => {
+            codeItems.forEach(item => {
                 const row = document.createElement('div');
                 row.style.cssText = "border-bottom: 1px dashed #CCC; padding: 6px 0; display: flex; justify-content: space-between; align-items: center;";
                 row.innerHTML = `
-                    <div>
-                        <strong style="color:#0033CC;">${escapeHTML(post.title)}</strong><br>
-                        <span style="font-size:11px; color:#666;">Date: ${post.date}</span>
+                    <div style="max-width: 65%;">
+                        <strong style="color:#0033CC;">${escapeHTML(item.title)}</strong><br>
+                        <span style="font-size:11px; color:#666; font-family: monospace;">Main/Primary: ${escapeHTML(item.file_name)}</span>
                     </div>
                     <div>
-                        <button class="button-retro" style="color:red; font-weight:normal;" onclick="deletePost(${post.id})">Delete</button>
+                        <button class="button-retro" style="color:blue;" onclick="startEdit(${item.id})">Edit</button>
+                        <button class="button-retro" style="color:red;" onclick="deleteNode(${item.id})">Delete</button>
                     </div>
                 `;
                 queueContainer.appendChild(row);
             });
         }
 
-        document.getElementById('post-form').addEventListener('submit', async function(e) {
+        window.startEdit = function(id) {
+            const target = codeItems.find(c => c.id === id);
+            if (!target) return;
+
+            editingId = id;
+            document.getElementById('code-title').value = target.title;
+            document.getElementById('code-desc').value = target.description;
+            document.getElementById('code-complexity').value = target.complexity;
+
+            document.getElementById('files-container').innerHTML = '';
+
+            try {
+                // If it contains a multiple file structure layout array payload
+                if (target.code_content.trim().startsWith('[') || target.code_content.trim().startsWith('{')) {
+                    const parsedFiles = JSON.parse(target.code_content);
+                    if (Array.isArray(parsedFiles)) {
+                        parsedFiles.forEach(f => addFileBlock(f.name, f.lang, f.content));
+                    } else {
+                        addFileBlock(target.file_name, target.language, target.code_content);
+                    }
+                } else {
+                    addFileBlock(target.file_name, target.language, target.code_content);
+                }
+            } catch(e) {
+                addFileBlock(target.file_name, target.language, target.code_content);
+            }
+
+            document.getElementById('form-panel-title').innerText = "⚠️ Refactoring Repo Node: " + target.title;
+            document.getElementById('submit-btn').innerText = "Push Upstream Changes";
+            document.getElementById('cancel-edit-btn').style.display = "inline-block";
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.clearEditMode = function() {
+            editingId = null;
+            document.getElementById('code-form').reset();
+            document.getElementById('files-container').innerHTML = '';
+            addFileBlock(); // put one blank fallback file area
+            document.getElementById('form-panel-title').innerText = "Initialize / Create Repository Asset";
+            document.getElementById('submit-btn').innerText = "Commit Repository Upstream";
+            document.getElementById('cancel-edit-btn').style.display = "none";
+        }
+
+        document.getElementById('code-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const title = document.getElementById('post-title').value;
-            const content = document.getElementById('post-content').value;
-            const stars = parseInt(document.getElementById('post-stars').value);
-            
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = new Date().toLocaleDateString('en-US', options);
+            const fileBlocks = document.querySelectorAll('.file-block');
+            if (fileBlocks.length === 0) {
+                alert("You must include at least 1 script file partition inside this repository registry allocation!");
+                return;
+            }
 
-            const { error } = await _supabase.from('posts').insert([
-                {
-                    title: title,
-                    content: content,
-                    stars: stars,
-                    date: formattedDate,
-                    views: 0
+            const filesArray = [];
+            fileBlocks.forEach(b => {
+                filesArray.push({
+                    name: b.querySelector('.file-name-input').value,
+                    lang: b.querySelector('.file-lang-input').value,
+                    content: b.querySelector('.file-content-input').value
+                });
+            });
+
+            // Pack array into database storage parameters safely
+            const payload = {
+                title: document.getElementById('code-title').value,
+                file_name: filesArray[0].name, // Main baseline header item tracking label
+                language: filesArray[0].lang,
+                description: document.getElementById('code-desc').value,
+                code_content: JSON.stringify(filesArray), // Packed list array system data array
+                complexity: parseInt(document.getElementById('code-complexity').value)
+            };
+
+            if (editingId !== null) {
+                const { error } = await _supabase.from('codes').update(payload).eq('id', editingId);
+                if (error) alert('Update Compilation Error: ' + error.message);
+                else {
+                    alert('Upstream code collection execution sequence compiled successfully!');
+                    clearEditMode();
+                    fetchQueue();
                 }
-            ]);
-
-            if (error) {
-                alert('Database Error: ' + error.message);
             } else {
-                document.getElementById('post-form').reset();
-                alert('Your masterpiece has been updated successfully!');
-                fetchQueue();
+                payload.date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                payload.views = 0;
+
+                const { error } = await _supabase.from('codes').insert([payload]);
+                if (error) alert('Database Link Error: ' + error.message);
+                else {
+                    clearEditMode();
+                    alert('New multifile directory node committed upstream!');
+                    fetchQueue();
+                }
             }
         });
 
-        window.deletePost = async function(id) {
-            if (confirm("Are you sure you want to remove this bulletin from history?")) {
-                const { error } = await _supabase.from('posts').delete().eq('id', id);
+        window.deleteNode = async function(id) {
+            if (confirm("Wipe this code repository bundle array block entry permanently?")) {
+                if (editingId === id) clearEditMode();
+                const { error } = await _supabase.from('codes').delete().eq('id', id);
                 if (error) console.error(error);
                 fetchQueue();
             }
@@ -226,7 +396,8 @@
             return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
 
-        fetchQueue();
+        // Add initial blank file placeholder field
+        addFileBlock();
     </script>
 </body>
 </html>
