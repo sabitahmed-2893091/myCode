@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>myCode - Code Repository</title>
+    
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <style>
+        body {
+            background-color: #FFFFFF;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            color: #333;
+            margin: 0;
+            padding: 10px;
+        }
+        a {
+            color: #0033CC;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        #header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px;
+            margin-bottom: 15px;
+        }
+        #logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+            letter-spacing: -1px;
+        }
+        #logo span {
+            background-color: #28a745; /* GitHub Green Box */
+            color: #FFF;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 2px;
+        }
+        .search-box {
+            border: 1px solid #7F9DB9;
+            padding: 4px;
+            width: 300px;
+        }
+        .button-retro {
+            background: #ECECEC;
+            border: 1px solid #CCCCCC;
+            border-bottom: 2px solid #999999;
+            border-right: 2px solid #999999;
+            color: #000;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .button-retro:active {
+            border: 1px solid #999999;
+            border-top: 2px solid #666666;
+            border-left: 2px solid #666666;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .box {
+            border: 1px solid #D5E5F5;
+            background-color: #F2F7FC;
+            margin-bottom: 15px;
+        }
+        .box-header {
+            background-color: #EAEAEA;
+            border-bottom: 1px solid #D3D3D3;
+            padding: 6px 8px;
+            font-weight: bold;
+            color: #444;
+            display: flex;
+            justify-content: space-between;
+        }
+        .box-content {
+            padding: 10px;
+        }
+        .file-title {
+            font-size: 18px;
+            color: #0033CC;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .file-meta {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #CCC;
+            padding-bottom: 5px;
+        }
+        .file-description {
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: #444;
+        }
+        /* Code Container Box */
+        .code-viewport-wrapper {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f6f8fa;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .code-viewport-header {
+            background-color: #eaecef;
+            padding: 8px 10px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #24292e;
+            border-bottom: 1px solid #d1d5da;
+            font-weight: bold;
+        }
+        .code-viewport {
+            margin: 0;
+            padding: 15px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 13px;
+            line-height: 1.45;
+            overflow-x: auto;
+            white-space: pre;
+            color: #24292e;
+            background-color: #f6f8fa;
+        }
+        .complexity-bars {
+            color: #28a745;
+            font-size: 14px;
+        }
+        .lang-badge {
+            background-color: #e1e4e8;
+            color: #586069;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid #d1d5da;
+        }
+        .thumb-file-icon {
+            width: 45px;
+            height: 45px;
+            background-color: #f6f8fa;
+            border: 1px solid #d1d5da;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-size: 10px;
+            color: #586069;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 3px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="header-bar">
+            <div id="logo"><a href="index.html" style="color:black; text-decoration:none;">my<span>Code</span></a></div>
+            <div>
+                <input type="text" id="search-input" class="search-box" placeholder="Search repositories and code snippets...">
+                <button class="button-retro" onclick="executeSearch()">Search</button>
+            </div>
+            <div>
+                <a href="admin.html" class="button-retro" style="background-color: #FFF9CC; border-color: #E6DB55; text-decoration: none; padding: 4px 10px;">Admin</a>
+            </div>
+        </div>
+
+        <div class="main-layout" id="main-content-wrapper" style="display: none;">
+            <div>
+                <div class="box">
+                    <div class="box-header">
+                        <span>Blob File Viewer</span>
+                        <span id="active-lang-indicator">Language: N/A</span>
+                    </div>
+                    <div class="box-content">
+                        <div class="file-title" id="active-title"></div>
+                        <div class="file-meta" id="active-meta"></div>
+                        <div class="file-description" id="active-desc"></div>
+                        
+                        <div class="code-viewport-wrapper">
+                            <div class="code-viewport-header" id="active-filename">file.txt</div>
+                            <pre class="code-viewport"><code id="active-code"></code></pre>
+                        </div>
+
+                        <div>
+                            <span style="font-weight:bold;">Complexity Index:</span> 
+                            <span class="complexity-bars" id="active-complexity"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="box">
+                    <div class="box-header">File Navigator Tree</div>
+                    <div class="box-content" id="sidebar-list" style="padding: 5px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="empty-state" class="box" style="padding: 40px; text-align: center;">
+            <h2 id="empty-title" style="color: #666;">No Repositories Tracked Yet!</h2>
+            <p id="empty-desc" style="color: #888;">The database registry is completely clear.</p>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://npgslvyukrbnugxkdisp.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_jv_RDsZY8--iwjAIFsAqDw_wHGX_RQx";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let codeItems = [];
+        let filteredItems = [];
+        let activeId = null;
+
+        function initActiveId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            activeId = urlParams.get('id');
+        }
+
+        async function fetchCodes() {
+            initActiveId();
+            let { data, error } = await _supabase.from('codes').select('*').order('id', { ascending: false });
+            if (error) console.error(error);
+            codeItems = data || [];
+            filteredItems = codeItems;
+            
+            if (!activeId && filteredItems.length > 0) {
+                activeId = filteredItems[0].id.toString();
+            }
+            renderPage();
+        }
+
+        function executeSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            if (query === "") {
+                filteredItems = codeItems;
+            } else {
+                filteredItems = codeItems.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    item.file_name.toLowerCase().includes(query) ||
+                    item.language.toLowerCase().includes(query) ||
+                    item.description.toLowerCase().includes(query)
+                );
+            }
+
+            if (filteredItems.length > 0) {
+                activeId = filteredItems[0].id.toString();
+                const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + activeId;
+                window.history.pushState({path:newurl}, '', newurl);
+            }
+            
+            renderPage();
+        }
+
+        document.getElementById('search-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                executeSearch();
+            }
+        });
+
+        async function renderPage() {
+            if (filteredItems.length === 0) {
+                document.getElementById('empty-state').style.display = 'block';
+                document.getElementById('main-content-wrapper').style.display = 'none';
+                
+                if (document.getElementById('search-input').value.trim() !== "") {
+                    document.getElementById('empty-title').innerText = "No Matching Files Discovered!";
+                    document.getElementById('empty-desc').innerText = "Try querying for a alternate file extension or keyword.";
+                } else {
+                    document.getElementById('empty-title').innerText = "No Repositories Tracked Yet!";
+                    document.getElementById('empty-desc').innerText = "The database registry is completely clear.";
+                }
+                return;
+            }
+
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('main-content-wrapper').style.display = 'grid';
+
+            let currentItem = filteredItems.find(p => p.id.toString() === activeId.toString()) || filteredItems[0];
+            activeId = currentItem.id.toString();
+            
+            if (!sessionStorage.getItem(`viewed-code-${currentItem.id}`)) {
+                currentItem.views += 1;
+                sessionStorage.setItem(`viewed-code-${currentItem.id}`, 'true');
+                await _supabase.from('codes').update({ views: currentItem.views }).eq('id', currentItem.id);
+            }
+
+            document.getElementById('active-title').innerText = currentItem.title;
+            document.getElementById('active-filename').innerText = `📄 ${currentItem.file_name}`;
+            document.getElementById('active-lang-indicator').innerText = `Extension: .${currentItem.language.toLowerCase()}`;
+            document.getElementById('active-meta').innerText = `Committed: ${currentItem.date} | Hits: ${currentItem.views}`;
+            document.getElementById('active-desc').innerText = currentItem.description;
+            document.getElementById('active-code').innerText = currentItem.code_content;
+            
+            let complexityString = '';
+            for(let i=0; i<5; i++) {
+                complexityString += i < currentItem.complexity ? '█' : '░';
+            }
+            document.getElementById('active-complexity').innerText = complexityString;
+
+            const sidebar = document.getElementById('sidebar-list');
+            sidebar.innerHTML = '';
+            filteredItems.forEach(item => {
+                const row = document.createElement('div');
+                row.style.cssText = "display: flex; margin-bottom: 10px; border-bottom: 1px solid #EEE; padding-bottom: 5px;";
+                
+                let fileIconElement = `
+                    <div class="thumb-file-icon">
+                        .${escapeHTML(item.language.substring(0,3).toLowerCase())}
+                    </div>`;
+
+                row.innerHTML = `
+                    ${fileIconElement}
+                    <div>
+                        <a href="#" onclick="changeActiveCode('${item.id}'); return false;" style="font-weight: ${item.id.toString() === currentItem.id.toString() ? 'bold' : 'normal'}; font-size: 12px; display: block;">${escapeHTML(item.file_name)}</a>
+                        <span style="font-size: 11px; color: #666;">Views: ${item.views}</span> &nbsp;
+                        <span class="lang-badge">${escapeHTML(item.language)}</span>
+                    </div>
+                `;
+                sidebar.appendChild(row);
+            });
+        }
+
+        window.changeActiveCode = function(id) {
+            activeId = id.toString();
+            const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + id;
+            window.history.pushState({path:newurl}, '', newurl);
+            renderPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('popstate', function() {
+            initActiveId();
+            renderPage();
+        });
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+
+        fetchCodes();
+    </script>
+</body>
+</html>
